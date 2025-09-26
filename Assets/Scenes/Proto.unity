@@ -3447,6 +3447,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1919059278}
   - component: {fileID: 1919059277}
+  - component: {fileID: 1919059279}
   m_Layer: 0
   m_Name: NavMesh Surface
   m_TagString: Untagged
@@ -3501,6 +3502,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1919059279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1919059276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08c1b216354d7aa419837c5287b95603, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  currentHealth: 100
+  HealthSlider: {fileID: 0}
 --- !u!1 &1982105259
 GameObject:
   m_ObjectHideFlags: 0
@@ -3926,7 +3941,12 @@ MonoBehaviour:
   spawnPoints:
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   spawnEffect: {fileID: 0}
+  EvolutionUI: {fileID: 0}
+  WaveInfoText: {fileID: 0}
   baseEnemiesPerWave: 5
   minSpawnDelay: 0.5
   maxSpawnDelay: 2

@@ -10,10 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a3a9a5a1bc8a1854c9161636bd65e993, type: 3}
-  m_Name: Test1 2
+  m_Name: Evolution 3
   m_EditorClassIdentifier: Assembly-CSharp::EvolutionOption
-  optionName: c
-  description: fasedc
-  icon: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  speedBonus: 12
-  healthBonus: 20
+  optionName: Unholy Precision
+  description: Your cursed eyes sharpen. Weapon spread narrows slightly.
+  icon: {fileID: -1593522403, guid: d01f533bcaa99454684c95239ac7ce31, type: 3}
+  healthMultiplier: 0
+  speedMultiplier: 0
+  fireRateMultiplier: 0
+  bulletSpreadMultiplier: -0.1
+  bulletDamageMultiplier: 0

@@ -66,6 +66,7 @@ public class EnemyAI : MonoBehaviour, IDamageable
             fireRate = EnemyStats.Instance.baseFireRate;
             SpreadRange = EnemyStats.Instance.baseBulletSpread;
             moveSpeed = EnemyStats.Instance.baseSpeed;
+            
         }
         else
         {
@@ -75,7 +76,7 @@ public class EnemyAI : MonoBehaviour, IDamageable
   
     void Start()
     {
-        player = FindAnyObjectByType<EasyPeasyFirstPersonController.FirstPersonController>().transform;
+        player = GameObject.FindGameObjectWithTag("Player").transform;
         startHealth = Health;
         HealthSlider.transform.localScale = new Vector3(HealthSlider.transform.localScale.x, HealthSlider.transform.localScale.y / 100 * Health, HealthSlider.transform.localScale.z);
         HealthSlider.value = 1;

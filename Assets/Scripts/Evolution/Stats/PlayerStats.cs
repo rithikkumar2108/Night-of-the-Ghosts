@@ -12,6 +12,7 @@ public class PlayerStats : MonoBehaviour
     public float baseBulletSpread = 0.15f;
     public float baseBulletDamage = 20f;
 
+    public int magazineCount = 20;
     private void Awake()
     {
         if (Instance != null && Instance != this)

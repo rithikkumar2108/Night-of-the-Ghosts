@@ -6,6 +6,7 @@ using System.Collections; // If you use TextMeshPro
 public class EvolutionUI : MonoBehaviour
 {
     public TextMeshProUGUI CountdownText;
+    public CanvasGroup canvasGroup;
     public StatsUI StatsUI;
     [Header("Button 1 References")]
     [SerializeField] private Button button1;
@@ -23,9 +24,11 @@ public class EvolutionUI : MonoBehaviour
     private EvolutionOption option2;
 
     private EvolutionManager evolutionManager;
-
+ 
     private void OnEnable()
     {
+        canvasGroup.interactable = true;
+        EasyPeasyFirstPersonController.FirstPersonController.playerActive = false;
         evolutionManager = GameObject.FindFirstObjectByType<EvolutionManager>();
 
         EvolutionOption[] options = evolutionManager.GetRandomChoices();
@@ -44,9 +47,15 @@ public class EvolutionUI : MonoBehaviour
         button1.onClick.AddListener(() => Choose(option1, option2));
         button2.onClick.AddListener(() => Choose(option2, option1));
     }
+    private void OnDisable()
+    {
+        EasyPeasyFirstPersonController.FirstPersonController.playerActive = true ;
 
+    }
     private void Choose(EvolutionOption chosen, EvolutionOption notChosen)
     {
+        canvasGroup.interactable = false;
+
         Debug.Log($"[EVOLUTION] Player chose: {chosen.optionName} | Enemies gain: {notChosen.optionName}");
         StartCoroutine(ApplyChoice(chosen, notChosen));
     }

@@ -1,6 +1,8 @@
 using SingularityGroup.HotReload;
 using UnityEngine;
 using System.Collections;
+using TMPro;
+using EasyPeasyFirstPersonController;
 
 public class Gun : MonoBehaviour
 {
@@ -9,16 +11,18 @@ public class Gun : MonoBehaviour
     public float Damage;
     [Range(0, 0.3f)]
     public float SpreadRange;
+    public int MagazineCount;      // Spare magazines
     [Space]
     public Camera fpsCam;
     public GameObject BulletObject;
     public Transform BulletSpawnPoint;
     public ParticleSystem MuzzleFlash;
+    public TMP_Text bulletInfoText; // drag UI Text in Inspector
+    public GameObject GameOverPanel;
     [Header("Parameters")]
     public float BulletForce;
     public float maxRange;
 
-    public int MagazineCount;      // Spare magazines
     public int MagazineCapacity;   // Max bullets per mag
     public int CurrentAmmo;        // Bullets in current mag
 
@@ -38,37 +42,49 @@ public class Gun : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R) && !isReloading && MagazineCount > 0 && CurrentAmmo < MagazineCapacity)
-        {
-            StartCoroutine(Reload());
-            return;
-        }
 
-        if (Input.GetKey(KeyCode.Mouse0) && Time.time >= nextTimeToShoot && !isReloading)
+        if(MagazineCount == 0 && CurrentAmmo == 0)
         {
-            if (CurrentAmmo <= 0)
+            GameOverPanel.SetActive(true);
+            EasyPeasyFirstPersonController.FirstPersonController.playerActive = false;
+            Time.timeScale = 0;
+
+
+        }
+        bulletInfoText.text = $"Ammo: {CurrentAmmo}/{MagazineCapacity} | Mags: {MagazineCount}\n";
+        if (FirstPersonController.playerActive)
+        {
+            if (Input.GetKeyDown(KeyCode.R) && !isReloading && MagazineCount > 0 && CurrentAmmo < MagazineCapacity)
             {
-                if (MagazineCount > 0)
-                {
-                    StartCoroutine(Reload());
-                }
+                StartCoroutine(Reload());
                 return;
             }
 
-            nextTimeToShoot = Time.time + 1 / fireRate;
-            Shoot();
-            CurrentAmmo--;
+            if (Input.GetKey(KeyCode.Mouse0) && Time.time >= nextTimeToShoot && !isReloading)
+            {
+                if (CurrentAmmo <= 0)
+                {
+                    if (MagazineCount > 0)
+                    {
+                        StartCoroutine(Reload());
+                    }
+                    return;
+                }
 
-            StartCoroutine(RecoilAnimation());
-        }
+                nextTimeToShoot = Time.time + 1 / fireRate;
+                Shoot();
+                CurrentAmmo--;
 
-        if (!isReloading)
-        {
-            transform.localPosition = Vector3.Lerp(transform.localPosition, initialLocalPos, Time.deltaTime * recoilSpeed);
-            transform.localRotation = Quaternion.Slerp(transform.localRotation, initialLocalRot, Time.deltaTime * recoilSpeed);
+                StartCoroutine(RecoilAnimation());
+            }
+
+            if (!isReloading)
+            {
+                transform.localPosition = Vector3.Lerp(transform.localPosition, initialLocalPos, Time.deltaTime * recoilSpeed);
+                transform.localRotation = Quaternion.Slerp(transform.localRotation, initialLocalRot, Time.deltaTime * recoilSpeed);
+            }
         }
     }
-
     void Shoot()
     {   
         Ray ray = fpsCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
