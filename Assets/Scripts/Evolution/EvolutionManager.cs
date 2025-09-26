@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 
 public class EvolutionManager : MonoBehaviour
 {
@@ -23,6 +24,10 @@ public class EvolutionManager : MonoBehaviour
     {
         EvolutionSystem.EvolvePlayer(chosen);
         EvolutionSystem.EvolveEnemies(notChosen);
+       
+    }
+    public void StartNextWave()
+    {
         waveGenerator.StartNextWave();
     }
 

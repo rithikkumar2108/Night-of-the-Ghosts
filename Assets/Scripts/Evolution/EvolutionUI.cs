@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using TMPro; // If you use TextMeshPro
+using TMPro;
+using System.Collections; // If you use TextMeshPro
 
 public class EvolutionUI : MonoBehaviour
 {
+    public TextMeshProUGUI CountdownText;
+    public StatsUI StatsUI;
     [Header("Button 1 References")]
     [SerializeField] private Button button1;
     [SerializeField] private TMP_Text button1Name;
@@ -45,10 +48,24 @@ public class EvolutionUI : MonoBehaviour
     private void Choose(EvolutionOption chosen, EvolutionOption notChosen)
     {
         Debug.Log($"[EVOLUTION] Player chose: {chosen.optionName} | Enemies gain: {notChosen.optionName}");
-
-        evolutionManager.ApplyChoice(chosen, notChosen);
-        // Hide UI after choosing
-        gameObject.SetActive(false);
+        StartCoroutine(ApplyChoice(chosen, notChosen));
     }
+    public IEnumerator ApplyChoice(EvolutionOption chosen, EvolutionOption notChosen)
+    {
+        evolutionManager.ApplyChoice(chosen, notChosen);
+        StatsUI.UpdateStats();
+        float countdown = 5f;
+        while (countdown > 0)
+        {
+            CountdownText.text = $"Next Wave in {Mathf.Ceil(countdown)}...";
+            yield return new WaitForSeconds(1f);
+            countdown -= 1f;
+        }
 
+        CountdownText.text = "";
+
+        gameObject.SetActive(false);
+
+        evolutionManager.StartNextWave();
+    }
 }

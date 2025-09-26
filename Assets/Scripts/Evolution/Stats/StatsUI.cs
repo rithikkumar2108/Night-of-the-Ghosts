@@ -16,9 +16,9 @@ public class StatsUI : MonoBehaviour
         UpdateStats();
     }
 
+   
 
-
-    private void UpdateStats()
+    public void UpdateStats()
     {
         if (PlayerStats.Instance != null)
         {

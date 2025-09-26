@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using TMPro;
 
 public class WaveGenerator : MonoBehaviour
 {
@@ -8,12 +9,13 @@ public class WaveGenerator : MonoBehaviour
     public Transform[] spawnPoints;
     public ParticleSystem spawnEffect;
     public GameObject EvolutionUI;
+    public TextMeshProUGUI WaveInfoText;
     [Header("Wave Settings")]
     public int baseEnemiesPerWave = 5;
     public float minSpawnDelay = 0.5f;
     public float maxSpawnDelay = 2f;
 
-    private int currentWave = 0;
+    private int currentWave = 1;
     private bool isSpawning = false;
     [HideInInspector]
     public static float potentialEnemies = 0;
@@ -25,6 +27,7 @@ public class WaveGenerator : MonoBehaviour
     private void ShowEvolutionToStartNextWave()
     {
         EvolutionUI.SetActive(true);
+        WaveInfoText.text = "Wave " + currentWave;
     }
     public void StartNextWave()
     {
@@ -32,15 +35,24 @@ public class WaveGenerator : MonoBehaviour
             StartCoroutine(SpawnWave());
     }
     private void Update()
-    {
-        Debug.Log(potentialEnemies);
+    {        
+        //After 1st Wave ends, seemless continuation
+            if (potentialEnemies == 0 && finishedWave)
+            {
+                currentWave++;
+                ShowEvolutionToStartNextWave();
+                finishedWave = false;
+
+        }
+
+
     }
+    bool finishedWave;
     private IEnumerator SpawnWave()
     {
         isSpawning = true;
-        currentWave++;
 
-        int enemiesToSpawn = baseEnemiesPerWave + (currentWave - 1);
+        int enemiesToSpawn = baseEnemiesPerWave + (currentWave-1);
         potentialEnemies = enemiesToSpawn;
         int spawned = 0;
 
@@ -78,15 +90,8 @@ public class WaveGenerator : MonoBehaviour
 
             isSpawning = false;
             Debug.Log($"--- Wave {currentWave} complete ---");
-
-            while (true)
-            {
-                if (potentialEnemies == 0)
-                {
-                    ShowEvolutionToStartNextWave();
-                }
-
-            }
+            finishedWave = true;
+            
         }
     }
 }
