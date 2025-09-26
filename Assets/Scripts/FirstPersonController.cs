@@ -1,15 +1,19 @@
-namespace EasyPeasyFirstPersonController
+﻿namespace EasyPeasyFirstPersonController
 {
     using System;
     using System.Collections;
+    using TMPro;
     using UnityEngine;
     public partial class FirstPersonController : MonoBehaviour
     {
-
+        public PlayerHealth playerHealth;
+        public Gun Gun;
+        [Header("Read-Only Stats")]
+        [Range(0f, 20f)] public float walkSpeed = 3f;
+        [Space]
         [Range(0, 100)] public float mouseSensitivity = 50f;
         [Range(0f, 200f)] private float snappiness = 100f;
-        [Range(0f, 20f)] public float walkSpeed = 3f;
-        [Range(0f, 30f)] public float sprintSpeed = 5f;
+        [Range(0f, 30f)] public float sprintSpeed;
         [Range(0f, 10f)] public float crouchSpeed = 1.5f;
         
         public float crouchHeight = 1f;
@@ -73,6 +77,9 @@ namespace EasyPeasyFirstPersonController
 
         private void Awake()
         {
+           
+
+            sprintSpeed = walkSpeed * 1.5f;
             characterController = GetComponent<CharacterController>();
             cam = playerCamera.GetComponent<Camera>();
             originalHeight = characterController.height;
@@ -81,7 +88,7 @@ namespace EasyPeasyFirstPersonController
             slideAudioSource = gameObject.AddComponent<AudioSource>();
             slideAudioSource.playOnAwake = false;
             slideAudioSource.loop = false;
-            Cursor.lockState = CursorLockMode.Locked;
+          //  Cursor.lockState = CursorLockMode.Locked;
             currentCameraHeight = originalCameraParentHeight;
             currentBobOffset = 0f;
             currentFov = normalFov;
@@ -93,7 +100,14 @@ namespace EasyPeasyFirstPersonController
             xVelocity = rotX;
             yVelocity = rotY;
         }
-
+        public void SetStats()
+        {
+            playerHealth.currentHealth = PlayerStats.Instance.baseHealth;
+            walkSpeed = PlayerStats.Instance.baseSpeed;
+            Gun.fireRate = PlayerStats.Instance.baseFireRate;
+            Gun.SpreadRange = PlayerStats.Instance.baseBulletSpread;
+            Gun.Damage = PlayerStats.Instance.baseBulletDamage;
+        }
         private void Update()
         {
             isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask, groundCheckQueryTriggerInteraction);
@@ -114,7 +128,7 @@ namespace EasyPeasyFirstPersonController
 
                 rotX += mouseX;
                 rotY -= mouseY;
-                rotY = Mathf.Clamp(rotY, -90f, 90f);
+                rotY = Mathf.Clamp(rotY, -90f, 60f);
 
                 xVelocity = Mathf.Lerp(xVelocity, rotX, snappiness * Time.deltaTime);
                 yVelocity = Mathf.Lerp(yVelocity, rotY, snappiness * Time.deltaTime);

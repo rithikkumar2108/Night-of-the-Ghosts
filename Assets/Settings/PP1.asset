@@ -21,7 +21,7 @@ MonoBehaviour:
     m_Value: 0.49
   intensity:
     m_OverrideState: 1
-    m_Value: 0.08
+    m_Value: 0.15
   scatter:
     m_OverrideState: 1
     m_Value: 0.5
@@ -103,6 +103,29 @@ MonoBehaviour:
   rounded:
     m_OverrideState: 0
     m_Value: 0
+--- !u!114 &-2881979865350326530
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09b7b0942607ccd449f69be2e55a1c17, type: 3}
+  m_Name: Mosaic
+  m_EditorClassIdentifier: sc.posteffects.runtime::SCPE.Mosaic
+  active: 1
+  <displayName>k__BackingField: 
+  mode:
+    <fieldHash>k__BackingField: 800022928
+    m_OverrideState: 1
+    m_Value: 0
+  size:
+    <fieldHash>k__BackingField: 1039373320
+    m_OverrideState: 1
+    m_Value: 0.578
+  shader: {fileID: 4800000, guid: 4ed46b989a17a264c8265616694641c6, type: 3}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,14 +1,19 @@
 ﻿using SingularityGroup.HotReload;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class EnemyAI : MonoBehaviour, IDamageable
 {
     public enum EnemyState { Patrolling, Chasing, Shooting, Searching }
     private EnemyState currentState;
     public float Health = 100;
+    public float Damage = 20f;
+    private float startHealth;
+    public Slider HealthSlider;
+
     [Header("References")]
-    public Transform player;
+    private Transform player;
     public GameObject projectilePrefab;
     public Transform firePoint;
 
@@ -32,7 +37,7 @@ public class EnemyAI : MonoBehaviour, IDamageable
     [Header("Shooting")]
     public float shootingRange = 10f;
     public float fireRate = 1f;
-    [Range(0, 0.2f)]
+    [Range(0, 0.3f)]
     public float SpreadRange;
 
     [Header("Search")]
@@ -46,15 +51,38 @@ public class EnemyAI : MonoBehaviour, IDamageable
 
     private float pathUpdateRate = 0.2f;
     private float pathUpdateTimer = 0f;
-
+    void Awake()
+    {
+        SetStats();
+    }
+    public void SetStats()
+    {
+        if (EnemyStats.Instance != null)
+        {
+            Health = EnemyStats.Instance.baseHealth;
+            Damage = EnemyStats.Instance.baseBulletDamage;
+            fireRate = EnemyStats.Instance.baseFireRate;
+            SpreadRange = EnemyStats.Instance.baseBulletSpread;
+            moveSpeed = EnemyStats.Instance.baseSpeed;
+        }
+        else
+        {
+            Debug.LogWarning("No EnemyStats.Instance found! Using default inspector values.");
+        }
+    }
+  
     void Start()
     {
+        player = FindAnyObjectByType<EasyPeasyFirstPersonController.FirstPersonController>().transform;
+        startHealth = Health;
+        HealthSlider.transform.localScale = new Vector3(HealthSlider.transform.localScale.x, HealthSlider.transform.localScale.y / 100 * Health, HealthSlider.transform.localScale.z);
+        HealthSlider.value = 1;
         agent = GetComponent<NavMeshAgent>();
         agent.speed = patrolSpeed; 
         startPos = transform.position;
         ChangeState(EnemyState.Patrolling);
     }
-
+   
     void Update()
     {
         if (player == null) return;
@@ -97,7 +125,6 @@ public class EnemyAI : MonoBehaviour, IDamageable
         }
     }
 
-    // --- STATES ---
     void Patrol()
     {
         agent.speed = patrolSpeed;
@@ -189,7 +216,6 @@ public class EnemyAI : MonoBehaviour, IDamageable
 
         if (Physics.Raycast(transform.position, dirToPlayer, out RaycastHit hit, viewDistance))
         {
-        //Debug.Log(hit.transform.name);
             if (hit.transform == player) return true;
         }
         return false;
@@ -211,6 +237,8 @@ public class EnemyAI : MonoBehaviour, IDamageable
         if (firePoint != null && projectilePrefab != null)
         {
             GameObject proj = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
+            Bullet bullet = proj.GetComponent<Bullet>();
+            bullet.Damage = Damage;
             Rigidbody rb = proj.GetComponent<Rigidbody>();
             if (rb != null)
             {
@@ -231,8 +259,24 @@ public class EnemyAI : MonoBehaviour, IDamageable
     }
 
     public void TakeDamage(float d) {
+
+
         Debug.Log("Enemy Hit");
         Health -= d;
+        HealthSlider.value = Health / startHealth;
+        if (Health > 0)
+        {
+            lastKnownPos = player.position;
+            hasLastKnownPos = true;
+            ChangeState(EnemyState.Chasing);
+            ChasePlayer();
+        }
+        else
+        {
+            Die();
+        }
     }
-
+    void Die() {
+        Destroy(gameObject);
+    }
 }

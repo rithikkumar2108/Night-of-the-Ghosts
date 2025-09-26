@@ -4,16 +4,19 @@ using System.Collections;
 
 public class Gun : MonoBehaviour
 {
+    [Header("Read-Only Stats")]
+    public float fireRate;
+    public float Damage;
+    [Range(0, 0.3f)]
+    public float SpreadRange;
+    [Space]
     public Camera fpsCam;
     public GameObject BulletObject;
     public Transform BulletSpawnPoint;
     public ParticleSystem MuzzleFlash;
     [Header("Parameters")]
-    public float fireRate;
     public float BulletForce;
     public float maxRange;
-    [Range(0, 0.2f)]
-    public float SpreadRange;
 
     public int MagazineCount;      // Spare magazines
     public int MagazineCapacity;   // Max bullets per mag
@@ -59,9 +62,11 @@ public class Gun : MonoBehaviour
             StartCoroutine(RecoilAnimation());
         }
 
-        // Smoothly return to original local position/rotation
-        transform.localPosition = Vector3.Lerp(transform.localPosition, initialLocalPos, Time.deltaTime * recoilSpeed);
-        transform.localRotation = Quaternion.Slerp(transform.localRotation, initialLocalRot, Time.deltaTime * recoilSpeed);
+        if (!isReloading)
+        {
+            transform.localPosition = Vector3.Lerp(transform.localPosition, initialLocalPos, Time.deltaTime * recoilSpeed);
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, initialLocalRot, Time.deltaTime * recoilSpeed);
+        }
     }
 
     void Shoot()
@@ -83,6 +88,8 @@ public class Gun : MonoBehaviour
         targetPoint.y += Random.Range(-SpreadRange, SpreadRange);
 
         GameObject bullet = Instantiate(BulletObject, BulletSpawnPoint.position, Quaternion.identity);
+        Bullet bullet1 = bullet.GetComponent<Bullet>();
+        bullet1.Damage = (Damage);
         MuzzleFlash.Play();
         bullet.transform.forward = (targetPoint - bullet.transform.position).normalized;
         bullet.GetComponent<Rigidbody>().AddForce(bullet.transform.forward * BulletForce, ForceMode.Impulse);
@@ -92,7 +99,8 @@ public class Gun : MonoBehaviour
     {
         isReloading = true;
         Debug.Log("Reloading...");
-        yield return new WaitForSeconds(reloadTime);
+
+        yield return StartCoroutine(ReloadAnimation());
 
         if (MagazineCount > 0)
         {
@@ -102,6 +110,32 @@ public class Gun : MonoBehaviour
 
         isReloading = false;
         Debug.Log("Reloaded!");
+    }
+
+    IEnumerator ReloadAnimation()
+    {
+        float duration = reloadTime; // how long the animation takes
+        float elapsed = 0f;
+
+        Vector3 forwardPos = initialLocalPos + Vector3.forward * 0.7f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+
+            // Move forward/back smoothly
+            transform.localPosition = Vector3.Lerp(initialLocalPos, forwardPos, Mathf.Sin(t * Mathf.PI));
+
+            // Apply rotation incrementally (Y = cowboy twirl, Z = roll)
+            transform.localRotation = initialLocalRot * Quaternion.Euler(t * 360f, 0, 0f);
+
+            yield return null;
+        }
+
+        // Reset at the end
+        transform.localPosition = initialLocalPos;
+        transform.localRotation = initialLocalRot;
     }
 
     IEnumerator RecoilAnimation()
