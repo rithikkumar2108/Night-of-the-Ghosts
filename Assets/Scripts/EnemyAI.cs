@@ -53,6 +53,8 @@ public class EnemyAI : MonoBehaviour, IDamageable
     private float pathUpdateTimer = 0f;
     void Awake()
     {
+        Debug.Log("Awake called!");
+
         SetStats();
     }
     public void SetStats()
@@ -277,6 +279,8 @@ public class EnemyAI : MonoBehaviour, IDamageable
         }
     }
     void Die() {
+        WaveGenerator.potentialEnemies -= 1;
         Destroy(gameObject);
+
     }
 }

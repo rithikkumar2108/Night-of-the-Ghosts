@@ -5,6 +5,7 @@ using System.Linq;
 public class EvolutionManager : MonoBehaviour
 {
     [SerializeField] private List<EvolutionOption> allOptions;
+    public WaveGenerator waveGenerator;
 
     public EvolutionOption[] GetRandomChoices()
     {
@@ -22,6 +23,7 @@ public class EvolutionManager : MonoBehaviour
     {
         EvolutionSystem.EvolvePlayer(chosen);
         EvolutionSystem.EvolveEnemies(notChosen);
+        waveGenerator.StartNextWave();
     }
 
 }

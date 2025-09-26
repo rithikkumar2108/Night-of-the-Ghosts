@@ -896,7 +896,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
   Health: 30
-  player: {fileID: 1636433141}
+  Damage: 20
+  HealthSlider: {fileID: 0}
   projectilePrefab: {fileID: 4551277755910823129, guid: 02b17691260c57a4b9fdcefb804b5711, type: 3}
   firePoint: {fileID: 1466282566}
   patrolRadius: 10
@@ -2801,11 +2802,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1636433141 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 9156347144755971338, guid: c82236c16aae9d34fbd437f8dea6e2c9, type: 3}
-  m_PrefabInstance: {fileID: 9156347143826488031}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1636433145
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2818,7 +2814,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08c1b216354d7aa419837c5287b95603, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  Health: 100
+  currentHealth: 100
+  HealthSlider: {fileID: 0}
 --- !u!1 &1662616648
 GameObject:
   m_ObjectHideFlags: 0
@@ -3485,7 +3482,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.26
+  m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: 228d6492b6d92534793a89ba4bc470dd, type: 2}
   m_BuildHeightMesh: 0
@@ -3813,6 +3810,7 @@ GameObject:
   - component: {fileID: 2128152109}
   - component: {fileID: 2128152108}
   - component: {fileID: 2128152107}
+  - component: {fileID: 2128152111}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -3912,6 +3910,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2128152111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2128152106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c26d1f735ba822a45831e9345a3c08fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WaveGenerator
+  enemyPrefab: {fileID: 0}
+  spawnPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  spawnEffect: {fileID: 0}
+  baseEnemiesPerWave: 5
+  minSpawnDelay: 0.5
+  maxSpawnDelay: 2
 --- !u!1001 &1145513743301101549
 PrefabInstance:
   m_ObjectHideFlags: 0
