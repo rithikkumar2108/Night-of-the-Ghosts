@@ -7,7 +7,7 @@ public class Gun : MonoBehaviour
     public Camera fpsCam;
     public GameObject BulletObject;
     public Transform BulletSpawnPoint;
-
+    public ParticleSystem MuzzleFlash;
     [Header("Parameters")]
     public float fireRate;
     public float BulletForce;
@@ -27,7 +27,6 @@ public class Gun : MonoBehaviour
     private bool isReloading = false;
     private Vector3 initialLocalPos;
     private Quaternion initialLocalRot;
-
     void Start()
     {
         initialLocalPos = transform.localPosition; // local to camera
@@ -66,7 +65,7 @@ public class Gun : MonoBehaviour
     }
 
     void Shoot()
-    {
+    {   
         Ray ray = fpsCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         RaycastHit hit;
 
@@ -84,8 +83,9 @@ public class Gun : MonoBehaviour
         targetPoint.y += Random.Range(-SpreadRange, SpreadRange);
 
         GameObject bullet = Instantiate(BulletObject, BulletSpawnPoint.position, Quaternion.identity);
-        bullet.transform.forward = targetPoint - bullet.transform.position;
-        bullet.GetComponent<Rigidbody>().AddForce(bullet.transform.forward * BulletForce * Time.deltaTime, ForceMode.Impulse);
+        MuzzleFlash.Play();
+        bullet.transform.forward = (targetPoint - bullet.transform.position).normalized;
+        bullet.GetComponent<Rigidbody>().AddForce(bullet.transform.forward * BulletForce, ForceMode.Impulse);
     }
 
     IEnumerator Reload()

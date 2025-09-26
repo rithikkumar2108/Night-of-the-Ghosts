@@ -5,12 +5,13 @@ namespace EasyPeasyFirstPersonController
     using UnityEngine;
     public partial class FirstPersonController : MonoBehaviour
     {
-        
+
         [Range(0, 100)] public float mouseSensitivity = 50f;
         [Range(0f, 200f)] private float snappiness = 100f;
         [Range(0f, 20f)] public float walkSpeed = 3f;
         [Range(0f, 30f)] public float sprintSpeed = 5f;
         [Range(0f, 10f)] public float crouchSpeed = 1.5f;
+        
         public float crouchHeight = 1f;
         public float crouchCameraHeight = 1f;
         public float slideSpeed = 8f;
@@ -284,5 +285,6 @@ namespace EasyPeasyFirstPersonController
             Cursor.lockState = newVisibility ? CursorLockMode.None : CursorLockMode.Locked;
             Cursor.visible = newVisibility;
         }
+       
     }
 }
